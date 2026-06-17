@@ -1,0 +1,26 @@
+services:
+
+  db:
+    image: postgres:16
+    container_name: biblioteca_banco
+    environment:
+      POSTGRES_USER: leitor
+      POSTGRES_PASSWORD: senha_secreta
+      POSTGRES_DB: acervo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - dados_biblioteca:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: biblioteca_api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://leitor:senha_secreta@db:5432/acervo_db
+    depends_on:
+      - db
+
+volumes:
+  dados_biblioteca:
